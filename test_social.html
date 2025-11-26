@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Mock Social Post</title>
+</head>
+
+<body>
+    <h1>Interesting Post</h1>
+    <p>This is a post to comment on.</p>
+
+    <div class="comment-section">
+        <textarea id="comment-box" placeholder="Write a comment..."></textarea>
+        <button id="submit-btn">Reply</button>
+    </div>
+
+    <div id="comments-log"></div>
+
+    <script>
+        const btn = document.getElementById('submit-btn');
+        const box = document.getElementById('comment-box');
+        const log = document.getElementById('comments-log');
+
+        btn.addEventListener('click', () => {
+            const text = box.value;
+            if (text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                div.className = 'comment';
+                log.appendChild(div);
+                console.log("Comment posted: " + text);
+                box.value = '';
+            }
+        });
+    </script>
+</body>
+
+</html>

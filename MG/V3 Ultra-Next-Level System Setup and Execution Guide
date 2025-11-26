@@ -1,0 +1,127 @@
+# V3 Ultra-Next-Level System Setup and Execution Guide
+
+This guide provides the step-by-step instructions required to set up and run the V3 Ultra-Next-Level system, consisting of the `c2_server_v3.py` and `bot_client_v3.py`.
+
+The V3 system requires a **Redis server** for distributed state management and **Playwright** for advanced browser automation.
+
+## Prerequisites
+
+You must have Python 3.8+ installed.
+
+### Step 1: Install System Dependencies (Redis and Playwright)
+
+The C2 server requires Redis, and the Bot Client requires Playwright browser binaries.
+
+#### 1.1. Install Redis Server
+
+The C2 server uses Redis for high-speed, distributed state.
+
+```bash
+# Install Redis server (for Debian/Ubuntu-based systems)
+sudo apt update
+sudo apt install redis-server
+
+# Verify Redis is running
+sudo systemctl status redis-server
+# It should show 'active (running)'
+```
+
+#### 1.2. Install Playwright Browser Binaries
+
+The Bot Client uses Playwright for headless browser automation.
+
+```bash
+# Install Playwright Python package
+pip3 install playwright redis-async
+
+# Install the necessary browser binaries (Chromium is sufficient)
+playwright install chromium
+```
+
+### Step 2: Install Python Dependencies
+
+Install the required Python libraries for both the C2 server and the Bot Client.
+
+```bash
+# Install FastAPI, Uvicorn, httpx, and Redis client
+pip3 install fastapi uvicorn httpx redis[async]
+```
+
+### Step 3: Configure the C2 Server (`c2_server_v3.py`)
+
+The C2 server is the central hub for command and control.
+
+1.  **Start the C2 Server:** Run the server using `uvicorn`.
+
+    ```bash
+    # Run the C2 server (it will connect to the local Redis instance)
+    python3 c2_server_v3.py
+    ```
+
+    *Observation:* The server will start on `http://0.0.0.0:5000`. You should see a log message confirming the Redis connection.
+
+2.  **Verify Health:** Open a new terminal and check the server's health.
+
+    ```bash
+    curl http://localhost:5000/health
+    # Expected output: {"status":"healthy","redis":"connected"}
+    ```
+
+### Step 4: Execute the Bot Client (`bot_client_v3.py`)
+
+The Bot Client will automatically connect to the C2 server and initialize its headless browser.
+
+1.  **Run the Bot Client:**
+
+    ```bash
+    # Run the bot client
+    python3 bot_client_v3.py
+    ```
+
+    *Observation:* The bot will log its unique ID, initialize the Playwright browser, and begin checking in with the C2 server every 30-90 seconds.
+
+### Step 5: Issue Commands (Operator Interface)
+
+Commands are issued to the C2 server via the `/c2/issue_command` endpoint. This is typically done using a script or a tool like `curl`.
+
+1.  **Issue a Complex Sequence Command:**
+
+    This command instructs the bot to perform a three-step, human-like journey using the stealthy headless browser.
+
+    ```bash
+    curl -X POST "http://localhost:5000/c2/issue_command" \
+         -H "Content-Type: application/json" \
+         -d '{
+               "command": {
+                 "action": "SEQUENCE",
+                 "commands": [
+                   {
+                     "action": "VISIT",
+                     "target_url": "https://www.google.com",
+                     "dwell_time": 15
+                   },
+                   {
+                     "action": "SLEEP",
+                     "time": 5
+                   },
+                   {
+                     "action": "CLICK",
+                     "target_url": "https://www.google.com",
+                     "selector": "input[name=\"q\"]"
+                   }
+                 ]
+               },
+               "target_bots": null
+             }'
+    ```
+
+    *Observation:* The C2 server will log the command ID. On its next check-in, the bot client will receive and execute this sequence, logging the browser activity.
+
+2.  **Check Botnet Status:**
+
+    ```bash
+    curl http://localhost:5000/c2/status | jq
+    # Expected output will show the 'active_bots' count as 1 (or more if you run multiple bots)
+    ```
+
+This guide ensures the V3 system is set up correctly, leveraging the full potential of Redis for scalability and Playwright for advanced, stealthy operation.

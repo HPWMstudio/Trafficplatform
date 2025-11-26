@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Mock Search Engine</title>
+</head>
+
+<body>
+    <h1>Mock Search</h1>
+    <textarea name="q" placeholder="Search..."></textarea>
+    <button id="search-btn">Search</button>
+
+    <div id="results" style="display:none;">
+        <h3>Results</h3>
+        <ul>
+            <li><a href="https://example.com">Example Site</a></li>
+            <li><a href="https://target-site.com/page">Target Site (Click Me)</a></li>
+            <li><a href="https://other.com">Other Site</a></li>
+        </ul>
+    </div>
+
+    <script>
+        const btn = document.getElementById('search-btn');
+        const input = document.querySelector('textarea[name="q"]');
+        const results = document.getElementById('results');
+
+        // Simulate search on Enter or Click
+        const doSearch = () => {
+            if (input.value) {
+                results.style.display = 'block';
+                console.log("Searched for: " + input.value);
+            }
+        };
+
+        btn.addEventListener('click', doSearch);
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                doSearch();
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bot Interaction Test</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        .container { max-width: 500px; margin: 0 auto; border: 1px solid #ccc; padding: 20px; border-radius: 8px; }
+        input, button { display: block; width: 100%; margin-bottom: 10px; padding: 8px; }
+        #log { margin-top: 20px; padding: 10px; background: #f0f0f0; border: 1px solid #ddd; min-height: 100px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Interaction Test Form</h2>
+        <input type="text" id="username" placeholder="Username">
+        <input type="text" id="comment" placeholder="Write a comment...">
+        <button id="submitBtn">Post Comment</button>
+        
+        <div id="log">Waiting for interaction...</div>
+    </div>
+
+    <script>
+        const logDiv = document.getElementById('log');
+        const btn = document.getElementById('submitBtn');
+        const usernameInput = document.getElementById('username');
+        const commentInput = document.getElementById('comment');
+
+        btn.addEventListener('click', () => {
+            const user = usernameInput.value;
+            const comment = commentInput.value;
+            logDiv.innerHTML += `<br><strong>${user}</strong> posted: ${comment}`;
+            console.log(`Posted: ${user} - ${comment}`);
+        });
+
+        // Log key presses for verification
+        document.addEventListener('keydown', (e) => {
+            console.log(`Key pressed: ${e.key}`);
+        });
+    </script>
+</body>
+</html>

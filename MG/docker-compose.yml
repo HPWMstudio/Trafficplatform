@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  # The C2 Server & Agent Manager
+  c2_server:
+    build: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+    environment:
+      - REDIS_URL=redis://redis:6379
+    volumes:
+      - .:/app
+    restart: always
+
+  # Redis for Message Queue
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
+    restart: always
